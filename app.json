@@ -2,6 +2,9 @@
   "expo": {
     "name": "react-native-chat",
     "slug": "react-native-chat",
+    "privacy": "public",
+    "description": "Chat to Antware",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
@@ -9,9 +12,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,7 +25,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.luis1896.chatAntware",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "permissions": [
+        "CAMERA_ROLL"
+      ],
+      "package": "com.luis1896.chatAntware",
+      "versionCode": 1
     }
   }
 }
