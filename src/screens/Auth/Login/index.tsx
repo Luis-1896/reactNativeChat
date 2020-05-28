@@ -6,7 +6,6 @@ import { RootStackParamList } from '../../../../App';
 import BasicButton from "../../../UI/Button/BasicButton";
 import styles from "./index.style";
 
-
 type  LoginScreenNavigationProps = StackNavigationProp<RootStackParamList, 'LoginScreen'>;
 
 interface LoginScreenProps {

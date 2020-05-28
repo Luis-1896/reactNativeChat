@@ -69,6 +69,7 @@ const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
         }
         else {
             setUserData({ ...userData, email: text, errorEmail: ''  })
+            return true;
         }
     }
 

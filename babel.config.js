@@ -2,5 +2,10 @@ module.exports = function(api) {
   api.cache(true);
   return {
     presets: ['babel-preset-expo'],
+    parserOpts: { strictMode: true }, //se agrego
+    plugins: [
+      ["@babel/plugin-proposal-decorators", { legacy: true }]
+    ]
+
   };
 };

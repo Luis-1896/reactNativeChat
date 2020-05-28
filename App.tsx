@@ -2,14 +2,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import {Component} from 'react';
-import { AsyncStorage } from 'react-native';
 import LoginScreen from "./src/screens/Auth/Login";
 import SignupScreen from "./src/screens/Auth/SignUp";
 import HomeScreen from "./src/screens/Home/HomeScreen";
 import ListUserScreen from "./src/screens/Users/ListUsers";
 import ChatScreen from "./src/screens/Users/Chat";
-//import Meteor from 'meteor-react-native';
-import Meteor from 'react-native-meteor';
+
+import Meteor from 'meteor-react-native/src/Meteor';
+import {AsyncStorage} from 'react-native';
+
+
 export type RootStackParamList={
     LoginScreen: React.FunctionComponent;
     SignupScreen: React.FunctionComponent;
@@ -20,13 +22,23 @@ export type RootStackParamList={
     ChatScreen: React.FunctionComponent;
 }
 
+Meteor.connect('ws://localhost:3000/websocket',{AsyncStorage})
+
 const Stack = createStackNavigator<RootStackParamList>();
-//Meteor.connect("ws://localhost:3000/websocket",{AsyncStorage})
+//Meteor.connect('ws://localhost:3000/websocket',{AsyncStorage})
+
+/*
+const meteor:any={
+    conexion: Meteor.connect("wss://localhost:3000/websocket")
+};*/
+
+
 class App extends Component{
-   componentWillMount(): void {
-       console.log(Meteor);
-       Meteor.connect('ws://localhost:3000/websocket',{AsyncStorage});
-       //Meteor.connect("ws://localhost:3000/websocket",{AsyncStorage})
+    componentDidMount() {
+        console.log(Meteor);
+        //console.log(Meteor.connect);
+        //console.log(meteor);
+        //Meteor.connect("ws://localhost:3000/websocket");
     }
     render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
         return (

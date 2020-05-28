@@ -1,3 +1,3 @@
 //declare module 'react-native-meteor';
-//declare module 'meteor-react-native';
+// declare module 'meteor-react-native';
 

@@ -31,7 +31,8 @@
     },
     "android": {
       "permissions": [
-        "CAMERA_ROLL"
+        "CAMERA_ROLL",
+        "ACCESS_NETWORK_STATE"
       ],
       "package": "com.luis1896.chatAntware",
       "versionCode": 1
