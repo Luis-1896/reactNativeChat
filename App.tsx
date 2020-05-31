@@ -22,24 +22,17 @@ export type RootStackParamList={
     ChatScreen: React.FunctionComponent;
 }
 
-Meteor.connect('ws://localhost:3000/websocket',{AsyncStorage})
 
 const Stack = createStackNavigator<RootStackParamList>();
+
 //Meteor.connect('ws://localhost:3000/websocket',{AsyncStorage})
 
-/*
-const meteor:any={
-    conexion: Meteor.connect("wss://localhost:3000/websocket")
-};*/
-
-
 class App extends Component{
+
     componentDidMount() {
-        console.log(Meteor);
-        //console.log(Meteor.connect);
-        //console.log(meteor);
-        //Meteor.connect("ws://localhost:3000/websocket");
+        Meteor.connect('ws://10.0.0.21:3000/websocket',{AsyncStorage});
     }
+
     render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
         return (
             <NavigationContainer>

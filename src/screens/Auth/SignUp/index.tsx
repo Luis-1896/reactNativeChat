@@ -5,6 +5,7 @@ import { ScrollView, Text} from 'react-native';
 import { RootStackParamList } from '../../../../App';
 import styles from "./index.style";
 import LargeButton from "../../../UI/Button/LargeButton";
+import Meteor from 'meteor-react-native/src/Meteor';
 
 type SignupScreenNavigationProps=StackNavigationProp<RootStackParamList, 'SignupScreen'>;
 
@@ -13,6 +14,7 @@ interface SignupScreenProps {
 }
 
 interface SignUpUserData {
+    _id: string;
     name: string;
     username: string;
     email: string;
@@ -30,6 +32,7 @@ const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
     const { navigation } = props;
 
     const [userData, setUserData] =useState<SignUpUserData>({
+        _id:'',
         name: '',
         username: '',
         email: '',
@@ -74,16 +77,21 @@ const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
     }
 
     useEffect(()=> {
-        if(userData.email!==''&&userData.name!==''&&userData.username!==''&&
-            userData.password!==''&&userData.repeatPassword!==''){
+        if((userData.email!==''&&userData.name!==''&&userData.username!==''&&
+            userData.password!==''&&userData.repeatPassword!=='')&&( userData.password===userData.repeatPassword)){
             setUserData({...userData, approved:true})
         }
     },[userData.email!=='',userData.name!=='',userData.username!=='',
-        userData.password!=='',userData.repeatPassword!=='']);
+        userData.password!=='',userData.repeatPassword!=='', userData.password===userData.repeatPassword]);
 
     const signUp = () =>{
-        console.log(userData);
-        // TODO: Aquí va ir el código para mandar los datos al endpoint de registrar en Meteor
+        Meteor.call('saveUser', { user:userData}, (err) => {
+            if(err) {
+                console.error('error: ',err);
+            } else {
+                navigation.navigate('LoginScreen');
+            }
+        });
     }
 
     return (

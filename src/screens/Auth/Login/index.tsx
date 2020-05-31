@@ -5,6 +5,7 @@ import { Image, ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../../../../App';
 import BasicButton from "../../../UI/Button/BasicButton";
 import styles from "./index.style";
+import Meteor from 'meteor-react-native/src/Meteor';
 
 type  LoginScreenNavigationProps = StackNavigationProp<RootStackParamList, 'LoginScreen'>;
 
@@ -18,6 +19,7 @@ interface UserData {
     hidePassword: boolean;
     passwordIconName: 'eye' | 'eye-off';
 }
+
 
 const LoginScreen: React.FunctionComponent<LoginScreenProps>=props => {
     const {navigation} =props;
@@ -39,10 +41,15 @@ const LoginScreen: React.FunctionComponent<LoginScreenProps>=props => {
     };
 
     const singIn = () => {
-        console.log(userData);
-        navigation.navigate('HomeScreen')
-        // TODO: Aquí iria la consulta del endpoint de Meteor
-        //navigation.navigate('HomeScreen');
+        Meteor.loginWithPassword(userData.username,userData.password,(err)=>{
+           if(err){
+               console.log('error: ',err);
+           } else{
+               console.log(Meteor.user());
+               setUserData({...userData,username:"",password:""})
+               navigation.navigate('HomeScreen');
+           }
+        })
     }
 
     return(

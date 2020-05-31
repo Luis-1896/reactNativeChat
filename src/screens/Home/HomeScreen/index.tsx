@@ -6,6 +6,7 @@ import { RootStackParamList } from '../../../../App';
 import styles from "./index.style";
 import InicioScreen from "../Inicio/index";
 import SettingsScreen from "../Settings/index";
+import Meteor from 'meteor-react-native/src/Meteor';
 
 type HomeScreenNavigationProps = StackNavigationProp<RootStackParamList, 'HomeScreen'>;
 
@@ -16,8 +17,9 @@ interface HomeScreenProps {
 // tslint:disable-next-line: no-any
 const createSlideMenu = (props:any) => {
     const {navigation} = props;
+
     const logOut=()=>{
-        // TODO: Aqui va la función para cerrar sesión
+        Meteor.logout();
         navigation.navigate('LoginScreen')
     }
 

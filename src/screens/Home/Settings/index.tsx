@@ -9,6 +9,7 @@ import { btnGrayStyle, btnRedStyle } from '../../../UI/Button/LargeButton/index.
 import styles from './index.style';
 import *as ImagePicker from 'expo-image-picker';
 import *as Permissions from 'expo-permissions';
+import Meteor from 'meteor-react-native/src/Meteor';
 
 type SettingsScreenNavigationProps=DrawerNavigationProp<RootStackParamList, 'SettingsScreen'>;
 
@@ -16,16 +17,16 @@ interface SettingsScreenProps {
     navigation: SettingsScreenNavigationProps;
 }
 
+
 const SettingsScreen: React.FunctionComponent<SettingsScreenProps>=props =>{
     const {navigation}=props;
 
-    //TODO: Obetener la información del usuario con Meteor
-
     const [userData, setUserData]=useState({
-        name: 'Luis Martínez López',
-        username: 'Luis',
-        email: 'luismartinezlopez1896@gmail.com',
-        photo: ''
+        _id: Meteor.user()._id,
+        name: Meteor.user().profile.name,
+        username: Meteor.user().username,
+        email: Meteor.user().emails[0].address,
+        photo: Meteor.user().profile.path
     });
 
     const [disabled, setDisabled]=useState({
@@ -38,27 +39,37 @@ const SettingsScreen: React.FunctionComponent<SettingsScreenProps>=props =>{
         const resultPermission= await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if(resultPermission){
             const resultImagePicker= await ImagePicker.launchImageLibraryAsync({
+                base64:true,
                 allowsEditing:true,
                 aspect: [4,3]
             });
-            console.log(resultImagePicker);
             if(resultImagePicker.cancelled===false){
-                const imageUri= resultImagePicker.uri;
-                console.log(imageUri);
-                setUserData({...userData, photo: imageUri})
+                const base64Ima= resultImagePicker.base64;
+                setUserData({...userData, photo: base64Ima})
             }
         }
     };
 
-    const editAccount = () => {
-        // TODO: Aquí va el código con Meteor para editar la información
-        console.log("Datos a editar");
-        console.log(userData);
+    const  editAccount = async () => {
+        Meteor.call('saveUser', { user:userData}, (err) => {
+            if(err) {
+                console.error('error: ',err);
+            } else {
+                navigation.goBack();
+            }
+        });
+
     }
 
     const deleteAccount = () => {
-        // TODO: Aquí va el código con Meteor para eliminar la cuenta
-        console.log("Eliminar cuenta")
+        Meteor.call('deleteUser', {idUser: userData._id}, err=>{
+            if(err){
+                console.error('Error to delete user: ', err);
+            } else{
+                Meteor.logout();
+                navigation.navigate('LoginScreen')
+            }
+        });
     }
 
     return(
@@ -67,7 +78,9 @@ const SettingsScreen: React.FunctionComponent<SettingsScreenProps>=props =>{
                 <BasicHeader icon={'menu'} onPress={()=> navigation.openDrawer()} titleHeader={'Configuración'}/>
                 <View style={styles.containerCenter}>
                     <Image style={styles.photo}
-                           source={userData.photo==='' ? require('../../../assets/logo.png') : {uri:userData.photo}} />
+                           source={userData.photo===undefined ? require('../../../assets/logo.png') :
+                                    {uri:`data:image/png;base64,${userData.photo}`
+                           }} />
                     <Button onPress={()=>openGallery()}
                             title={"Selecciona tu foto de perfil"}
                             color="#841584"
@@ -108,5 +121,6 @@ const SettingsScreen: React.FunctionComponent<SettingsScreenProps>=props =>{
         </Container>
     );
 };
+
 
 export default SettingsScreen;
