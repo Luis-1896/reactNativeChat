@@ -19,13 +19,17 @@ interface SignUpUserData {
     username: string;
     email: string;
     password: string;
+    repeatPassword: string;
+    approved: boolean;
+    errorEmail: string;
+    errorPassword: string;
+}
+
+interface PasswordData {
     hiddenPassword: boolean;
     hiddenRepeatPassword: boolean;
     iconPassword: 'eye' | 'eye-off';
     iconRepeatPassword: 'eye' | 'eye-off';
-    repeatPassword: string;
-    approved: boolean;
-    errorEmail: string;
 }
 
 const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
@@ -37,44 +41,57 @@ const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
         username: '',
         email: '',
         password: '',
+        repeatPassword:'',
+        approved: false,
+        errorEmail:'',
+        errorPassword:''
+    });
+
+    const [passwordData,setPasswordData]=useState<PasswordData>({
         hiddenPassword: true,
         hiddenRepeatPassword: true,
         iconPassword: 'eye',
         iconRepeatPassword: 'eye',
-        repeatPassword:'',
-        approved: false,
-        errorEmail:''
-    });
+    })
 
     const switchPasswordHidden = () => {
-        const { hiddenPassword } = userData;
-        setUserData({
-            ...userData,
+        const { hiddenPassword } = passwordData;
+        setPasswordData({
+            ...passwordData,
             hiddenPassword: !hiddenPassword,
             iconPassword: hiddenPassword ? 'eye-off' : 'eye'
         });
     };
 
     const switchRepeatPasswordHidden = () => {
-        const { hiddenRepeatPassword } = userData;
-        setUserData({
-            ...userData,
+        const { hiddenRepeatPassword } = passwordData;
+        setPasswordData({
+            ...passwordData,
             hiddenRepeatPassword: !hiddenRepeatPassword,
             iconRepeatPassword: hiddenRepeatPassword ? 'eye-off' : 'eye'
         });
     };
 
-    const validate = (text: string) => {
+    const validateEmail = (text: string) => {
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (reg.test(text) === false) {
-            setUserData({ ...userData, email: text, errorEmail: 'Error del formato del correo electrónico' })
+            setUserData({ ...userData, email: text, errorEmail: 'Error del formato del correo electrónico' });
             return false;
-        }
-        else {
-            setUserData({ ...userData, email: text, errorEmail: ''  })
+        } else {
+            setUserData({ ...userData, email: text, errorEmail: ''  });
             return true;
         }
-    }
+    };
+
+    const validatePassword = (text: string) => {
+        if (text!==userData.password) {
+            setUserData({...userData, repeatPassword:text, errorPassword:'Verificar contraseñas, no coinciden'});
+            return false;
+        } else {
+            setUserData({...userData, repeatPassword:text, errorPassword:''});
+            return true;
+        }
+    };
 
     useEffect(()=> {
         if((userData.email!==''&&userData.name!==''&&userData.username!==''&&
@@ -92,7 +109,7 @@ const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
                 navigation.navigate('LoginScreen');
             }
         });
-    }
+    };
 
     return (
         <Container>
@@ -117,28 +134,29 @@ const SignupScreen: React.FunctionComponent<SignupScreenProps> = props => {
                         <Label>Correo electrónico</Label>
                         <Input
                             value={userData.email}
-                            onChangeText={text => validate(text)}
+                            onChangeText={text => validateEmail(text)}
                         />
                     </Item>
                     <Text style={styles.errorEmail}>{userData.errorEmail}</Text>
                     <Item floatingLabel>
                         <Label>Contraseña</Label>
                         <Input
-                            secureTextEntry={userData.hiddenPassword}
+                            secureTextEntry={passwordData.hiddenPassword}
                             value={userData.password}
                             onChangeText={text => setUserData({...userData,password:text})}
                         />
-                        <Icon active name={userData.iconPassword} onPress={switchPasswordHidden} />
+                        <Icon active name={passwordData.iconPassword} onPress={switchPasswordHidden} />
                     </Item>
                     <Item floatingLabel>
                         <Label> Repite tu contraseña</Label>
                         <Input
-                            secureTextEntry={userData.hiddenRepeatPassword}
+                            secureTextEntry={passwordData.hiddenRepeatPassword}
                             value={userData.repeatPassword}
-                            onChangeText={text => setUserData({...userData,repeatPassword:text})}
+                            onChangeText={text => validatePassword(text)}
                         />
-                        <Icon active name={userData.iconRepeatPassword} onPress={switchRepeatPasswordHidden} />
+                        <Icon active name={passwordData.iconRepeatPassword} onPress={switchRepeatPasswordHidden} />
                     </Item>
+                    <Text style={styles.errorEmail}>{userData.errorPassword}</Text>
                     <LargeButton
                         disabled={!userData.approved}
                         labelButton={"Registrar"}

@@ -16,6 +16,9 @@ interface LoginScreenProps {
 interface UserData {
     username: string;
     password: string;
+}
+
+interface PasswordData {
     hidePassword: boolean;
     passwordIconName: 'eye' | 'eye-off';
 }
@@ -23,18 +26,20 @@ interface UserData {
 
 const LoginScreen: React.FunctionComponent<LoginScreenProps>=props => {
     const {navigation} =props;
-
     const [userData, setUserData] = useState<UserData>({
-        hidePassword: true,
         password: '',
-        passwordIconName: 'eye',
         username: ''
     });
 
+    const [passwordData, setPasswordData]=useState<PasswordData>({
+        hidePassword: true,
+        passwordIconName: 'eye'
+    });
+
     const switchPasswordHidden = () => {
-        const { hidePassword } = userData;
-        setUserData({
-            ...userData,
+        const { hidePassword } = passwordData;
+        setPasswordData({
+            ...passwordData,
             hidePassword: !hidePassword,
             passwordIconName: hidePassword ? 'eye-off' : 'eye'
         });
@@ -45,7 +50,6 @@ const LoginScreen: React.FunctionComponent<LoginScreenProps>=props => {
            if(err){
                console.log('error: ',err);
            } else{
-               console.log(Meteor.user());
                setUserData({...userData,username:"",password:""})
                navigation.navigate('HomeScreen');
            }
@@ -68,11 +72,11 @@ const LoginScreen: React.FunctionComponent<LoginScreenProps>=props => {
                     <Item floatingLabel>
                         <Label>Contraseña</Label>
                         <Input
-                            secureTextEntry={userData.hidePassword}
+                            secureTextEntry={passwordData.hidePassword}
                             value={userData.password}
                             onChangeText={text => setUserData({...userData,password:text})}
                         />
-                        <Icon active name={userData.passwordIconName} onPress={switchPasswordHidden} />
+                        <Icon active name={passwordData.passwordIconName} onPress={switchPasswordHidden} />
                     </Item>
                     <BasicButton labelButton={"Iniciar Sesión"}
                                  onPress={singIn} />

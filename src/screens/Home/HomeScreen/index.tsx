@@ -14,7 +14,6 @@ interface HomeScreenProps {
     navigation: HomeScreenNavigationProps;
 }
 
-// tslint:disable-next-line: no-any
 const createSlideMenu = (props:any) => {
     const {navigation} = props;
 
@@ -47,10 +46,10 @@ const Drawer=createDrawerNavigator();
 
 const HomeScreen: React.FunctionComponent<HomeScreenProps>=props => {
     return(
-        // tslint:disable-next-line: no-any
         <Drawer.Navigator drawerStyle={{ width: '90%' }} drawerContent={(data: any) => createSlideMenu(data)}>
             <Drawer.Screen
-                options={{drawerIcon:() => <Icon name="home" {...props}/>}}
+                options={{drawerIcon:() => <Icon name="home" {...props}/>,
+                }}
                 name="Inicio"
                 component={InicioScreen}
             />

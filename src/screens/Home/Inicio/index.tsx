@@ -5,7 +5,6 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootStackParamList } from '../../../../App';
 import BasicButton from "../../../UI/Button/BasicButton";
 import styles from "./index.style";
-import Meteor from 'meteor-react-native/src/Meteor';
 
 type InicioScreenNavigationProps = DrawerNavigationProp<RootStackParamList, 'InicioScreen'>;
 
@@ -15,13 +14,13 @@ interface InicioScreenProps {
 
 const InicioScreen: React.FunctionComponent<InicioScreenProps> = props => {
     const {navigation}=props;
+
     return(
         <Container>
             <Header noShadow={true} transparent={true}>
                 <Left>
                     <Button transparent style={styles.buttonLogo} onPress={()=>{
                         navigation.openDrawer();
-                        console.log(Meteor.userId());
                     }}>
                         <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
                     </Button>
@@ -31,7 +30,7 @@ const InicioScreen: React.FunctionComponent<InicioScreenProps> = props => {
             </Header>
             <View style={styles.bottom}>
                 <BasicButton
-                    labelButton={"Lista de Jugadores"}
+                    labelButton={"Lista de usuarios"}
                     onPress={() => navigation.navigate('ListUsersScreen')}
                 />
             </View>

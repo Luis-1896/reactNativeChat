@@ -22,15 +22,13 @@ export type RootStackParamList={
     ChatScreen: React.FunctionComponent;
 }
 
-
 const Stack = createStackNavigator<RootStackParamList>();
-
-//Meteor.connect('ws://localhost:3000/websocket',{AsyncStorage})
 
 class App extends Component{
 
     componentDidMount() {
-        Meteor.connect('ws://10.0.0.21:3000/websocket',{AsyncStorage});
+        //Meteor.connect('ws://10.0.0.21:3000/websocket',{AsyncStorage});
+        Meteor.connect('ws://35.193.145.51:80/websocket',{AsyncStorage});
     }
 
     render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -38,12 +36,14 @@ class App extends Component{
             <NavigationContainer>
                 <Stack.Navigator
                     screenOptions={{
-                        headerShown:false
+                        headerShown:false,
+                        gestureEnabled: false
                     }}
+
                 >
                     <Stack.Screen name="LoginScreen" component={LoginScreen} />
                     <Stack.Screen name="SignupScreen" component={SignupScreen} />
-                    <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                    <Stack.Screen name="HomeScreen" component={HomeScreen}/>
                     <Stack.Screen name="ListUsersScreen" component={ListUserScreen} />
                     <Stack.Screen name="ChatScreen" component={ChatScreen} />
 
